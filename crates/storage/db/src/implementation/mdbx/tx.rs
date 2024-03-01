@@ -94,7 +94,7 @@ impl<K: TransactionKind> Tx<K> {
     fn open_and_store_db<T: Table>(&self, slot: &OnceLock<DBI>) -> Result<DBI, DatabaseError> {
         match self.inner.open_db(Some(T::NAME)) {
             Ok(db) => {
-                slot.set(db.dbi()).unwrap();
+                let _ = slot.set(db.dbi());
                 Ok(db.dbi())
             }
             Err(e) => Err(DatabaseError::Open(e.into())),
